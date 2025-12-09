@@ -40,7 +40,7 @@ class RadioService : MediaSessionService() {
     private val serviceScope = CoroutineScope(Dispatchers.Main + serviceJob)
     private lateinit var okHttpClient: OkHttpClient
     
-    private val MEDIA_ID = "spaz_radio_stream"
+    private val mediaID = "spaz_radio_stream"
 
     companion object {
         private val _waveformFlow = MutableStateFlow<ByteArray?>(null)
@@ -94,7 +94,7 @@ class RadioService : MediaSessionService() {
 
         val mediaItem = MediaItem.Builder()
             .setUri("https://radio.spaz.org:8060/radio.ogg")
-            .setMediaId(MEDIA_ID)
+            .setMediaId(mediaID)
             .build()
             
         player?.setMediaItem(mediaItem)
@@ -173,7 +173,7 @@ class RadioService : MediaSessionService() {
             val listeners = if (jsonObject.has("listeners") && !jsonObject.get("listeners").isJsonNull) {
                 try {
                     jsonObject.get("listeners").asInt
-                } catch (e: Exception) { 0 }
+                } catch (_: Exception) { 0 }
             } else { 0 }
 
             val newMetadata = MediaMetadata.Builder()
@@ -185,7 +185,7 @@ class RadioService : MediaSessionService() {
                 player?.let { exoPlayer ->
                     if (exoPlayer.mediaItemCount > 0) {
                         val currentItem = exoPlayer.getMediaItemAt(0)
-                        if (currentItem.mediaId == MEDIA_ID) {
+                        if (currentItem.mediaId == mediaID) {
                             val newItem = currentItem.buildUpon()
                                 .setMediaMetadata(newMetadata)
                                 .build()
