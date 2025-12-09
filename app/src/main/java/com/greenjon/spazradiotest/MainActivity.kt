@@ -24,11 +24,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -37,6 +37,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RangeSlider
 import androidx.compose.material3.Scaffold
@@ -60,11 +62,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
@@ -85,14 +87,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-
         enableEdgeToEdge()
-
-// ✅ Force transparency explicitly for splash-hand-off devices:
-        window.statusBarColor = android.graphics.Color.TRANSPARENT
-        window.navigationBarColor = android.graphics.Color.TRANSPARENT
         
         if (ContextCompat.checkSelfPermission(
                 this,
@@ -122,7 +117,6 @@ fun RadioApp(
     var mediaController by remember { mutableStateOf<MediaController?>(null) }
     var isPlaying by remember { mutableStateOf(false) }
     
-    // Replaced isVisEnabled with showSettings
     var showSettings by remember { mutableStateOf(false) }
 
     // Settings State
@@ -166,7 +160,7 @@ fun RadioApp(
                 .fillMaxSize()
                 .background(
                     brush = Brush.verticalGradient(
-                        colors = listOf(DeepBlue, Magenta, DeepBlue)
+                        colors = listOf(DeepBlue, Magenta)
                     )
                 )
                 .padding(innerPadding)
@@ -182,18 +176,19 @@ fun RadioApp(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     // Top Left Play/Pause Button
-                    Button(
-                        onClick = {
-                            if (isPlaying) {
-                                mediaController?.pause()
-                            } else {
-                                mediaController?.play()
-                            }
-                        },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-                        modifier = Modifier.border(1.dp, NeonGreen, RoundedCornerShape(4.dp))
-                    ) {
-                        Text(if (isPlaying) "Pause" else "Play", color = NeonGreen)
+                    IconButton(onClick = {
+                        if (isPlaying) {
+                            mediaController?.pause()
+                        } else {
+                            mediaController?.play()
+                        }
+                    }) {
+                        Icon(
+                            painter = painterResource(id = if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play_arrow),
+                            contentDescription = if (isPlaying) "Pause" else "Play",
+                            tint = NeonGreen,
+                            modifier = Modifier.size(48.dp)
+                        )
                     }
 
                     // Center: Listeners count
@@ -204,14 +199,12 @@ fun RadioApp(
                     )
 
                     // Top Right Settings Button (Replaces VIS)
-                    Button(
-                        onClick = { showSettings = !showSettings }, // Toggle settings
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-                        modifier = Modifier.border(1.dp, NeonGreen, RoundedCornerShape(4.dp))
-                    ) {
-                        Text(
-                            text = "Settings",
-                            color = NeonGreen
+                    IconButton(onClick = { showSettings = !showSettings }) { // Toggle settings
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_settings),
+                            contentDescription = "Settings",
+                            tint = NeonGreen,
+                            modifier = Modifier.size(48.dp)
                         )
                     }
                 }
@@ -408,14 +401,13 @@ fun SettingsScreen(
             }
         }
 
-        Button(
-            onClick = onBack,
-            colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-            modifier = Modifier
-                .border(1.dp, NeonGreen, RoundedCornerShape(4.dp))
-                .padding(top = 8.dp)
-        ) {
-            Text("Close", color = NeonGreen)
+        IconButton(onClick = onBack) {
+             Icon(
+                painter = painterResource(id = R.drawable.ic_close),
+                contentDescription = "Close Settings",
+                tint = NeonGreen,
+                modifier = Modifier.size(48.dp)
+            )
         }
     }
 }
@@ -542,7 +534,6 @@ fun Oscilloscope(
         val xScale = width * 0.42f
         val yScale = height * 0.42f
 
-        val phaseOffset = Math.PI.toFloat() / 2f  // Fake stereo
         val baseScale = (height * 0.45f) * autoGain
 
         path.reset()
