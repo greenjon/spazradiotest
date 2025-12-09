@@ -1,3 +1,5 @@
+import java.io.ByteArrayOutputStream
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -11,13 +13,32 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.greenjon.spazradiotest"
-        minSdk = 24
-        targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
+        applicationId = "com.greenjon.spazradiotest" // Verify this is your ID
+        minSdk = 24 // Or whatever you have
+        targetSdk = 34 // Or whatever you have
+
+        // --- AUTOMATIC VERSIONING LOGIC ---
+        val gitCommitCount = try {
+            val stdout = ByteArrayOutputStream()
+            exec {
+                commandLine = listOf("git", "rev-list", "--count", "HEAD")
+                standardOutput = stdout
+            }
+            stdout.toString().trim().toInt()
+        } catch (e: Exception) {
+            1 // Fallback if git fails (e.g. during a fresh sync)
+        }
+
+        // Version Code = Total number of commits (e.g., 154)
+        versionCode = gitCommitCount
+        // Version Name = 1.0.154
+        versionName = "1.0.$gitCommitCount"
+        // ----------------------------------
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary = true
+        }
     }
 
     buildTypes {
@@ -60,7 +81,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.material)
-    implementation("com.google.errorprone:error_prone_annotations:2.18.0")
+    implementation("com.google.errorprone:error_prone_annotations:2.45.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
