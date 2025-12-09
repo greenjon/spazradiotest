@@ -10,6 +10,7 @@ import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.okhttp.OkHttpDataSource
+import androidx.media3.exoplayer.DefaultLoadControl
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.session.MediaSession
@@ -61,10 +62,21 @@ class RadioService : MediaSessionService() {
         val okHttpDataSourceFactory = OkHttpDataSource.Factory(okHttpClient)
             .setUserAgent("SpazRadioTest/1.0")
 
+        // Increase buffer sizes for stream stability
+        val loadControl = DefaultLoadControl.Builder()
+            .setBufferDurationsMs(
+                60000,  // 1 minute min buffer
+                120000, // 2 minutes max buffer
+                5000,   // 5 seconds to start playback
+                10000   // 10 seconds to resume after rebuffer
+            )
+            .build()
+
         player = ExoPlayer.Builder(this)
             .setMediaSourceFactory(
                 DefaultMediaSourceFactory(this).setDataSourceFactory(okHttpDataSourceFactory)
             )
+            .setLoadControl(loadControl)
             .build()
         
         // Ensure we have a valid intent for the session activity
