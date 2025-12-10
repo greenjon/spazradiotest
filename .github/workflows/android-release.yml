@@ -39,6 +39,7 @@ jobs:
       - name: Generate Commit Log (Full Messages)
         id: changelog
         run: |
+          # Find previous tag, if any
           PREV_TAG=$(git describe --tags --abbrev=0 --always "$(git rev-list --tags --max-count=1)^" 2>/dev/null || echo "")
 
           if [ -z "$PREV_TAG" ]; then
@@ -49,13 +50,16 @@ jobs:
             RANGE="$PREV_TAG..HEAD"
           fi
 
+          # Collect full commit messages
           LOG=$(git log $RANGE --pretty=format:"%h%n%s%n%b%n---")
 
-          LOG="${LOG//'%'/'%25'}"
-          LOG="${LOG//$'\n'/'%0A'}"
-          LOG="${LOG//$'\r'/'%0D'}"
+          # Write multiline output safely
+          {
+            echo "commit_log<<EOF"
+            echo "$LOG"
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
 
-          echo "commit_log=$LOG" >> $GITHUB_OUTPUT
 
       - name: Rename APK
         id: rename_apk
