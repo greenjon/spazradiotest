@@ -134,9 +134,6 @@ fun RadioApp(
         prefs.edit().putBoolean("visuals_enabled", lissajousMode.value).apply()
     }
     
- //   val tension = remember { mutableFloatStateOf(0.55f) }
-//    val gainRange = remember { mutableStateOf(0.5f..1.8f) }
-
     var trackTitle by remember { mutableStateOf("Connecting...") }
     var trackListeners by remember { mutableStateOf("") }
 
@@ -364,8 +361,6 @@ fun InfoBox(
                 onBack = onCloseSettings,
                 lissajousMode = lissajousMode,
                 showSchedule = showSchedule
-                //        tension = tension,
-                //gainRange = gainRange
             )
         } else {
             // Schedule Section (Bottom)
@@ -412,8 +407,6 @@ fun SettingsScreen(
     onBack: () -> Unit,
     lissajousMode: MutableState<Boolean>,
     showSchedule: MutableState<Boolean>
-//    tension: MutableFloatState,
-    //gainRange: MutableState<ClosedFloatingPointRange<Float>>
 ) {
     // Use a column but ensure it fits in the container
     Column(
@@ -493,53 +486,6 @@ fun SettingsScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Bézier Tension Control
-//            Column(modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(bottom = 16.dp)) {
-//                Text(
-//                    text = "Bézier Tension: ${String.format(Locale.US, "%.2f", tension.floatValue)}",
-//                    style = MaterialTheme.typography.bodyLarge,
-//                    color = NeonGreen
-//                )
-//                Slider(
-//                    value = tension.floatValue,
-//                    onValueChange = { tension.floatValue = it },
-//                    valueRange = 0f..1f,
-//                    colors = SliderDefaults.colors(
-//                        thumbColor = NeonGreen,
-//                        activeTrackColor = NeonGreen,
-//                        inactiveTrackColor = DeepBlue.copy(alpha = 0.5f)
-//                    )
-//                )
-//            }
-
-            // Auto-gain Range Control
-//            Column(modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(bottom = 16.dp)) {
-//                Text(
-//                    text = "Auto-gain Range: ${String.format(Locale.US, "%.1f", gainRange.value.start)} - ${
-//                        String.format(
-//                            Locale.US,
-//                            "%.1f",
-//                            gainRange.value.endInclusive
-//                        )
-//                    }",
-//                    style = MaterialTheme.typography.bodyLarge,
-//                    color = NeonGreen
-//                )
-//                RangeSlider(
-//                    value = gainRange.value,
-//                    onValueChange = { gainRange.value = it },
-//                    valueRange = 0f..3f,
-//                    colors = SliderDefaults.colors(
-//                        thumbColor = NeonGreen,
-//                        activeTrackColor = NeonGreen,
-//                        inactiveTrackColor = DeepBlue.copy(alpha = 0.5f)
-//                    )
-//                )
-//            }
         }
 
         IconButton(onClick = onBack) {
@@ -578,9 +524,6 @@ fun Oscilloscope(
     waveform: ByteArray?,
     isPlaying: Boolean,
     lissajousMode: Boolean,
- //   tension: Float,
-//    minGain: Float,
-//    maxGain: Float,
     modifier: Modifier = Modifier
 ) {
     val frameClock = remember { mutableLongStateOf(0L) }
