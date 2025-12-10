@@ -693,18 +693,34 @@ fun Oscilloscope(
                 path.reset()
 
                 if (maxAmplitude > 2 && waveform.size > 8) {
-                    var firstPoint = true
+//                    var firstPoint = true
                     val count = waveform.size
-                    val phaseShift = waveform.size / 4
+                    val phaseShift = (count * 0.37f).toInt()
+
+                    var firstPoint = true
+                    var lastA = 0f
+                    var lastB = 0f
 
                     for (i in 0 until count) {
-                        val a = ((waveform[i].toInt() and 0xFF) - 128) / 128f
-                        val bIndex = (i + phaseShift) % count
-                        val b = ((waveform[bIndex].toInt() and 0xFF) - 128) / 128f
 
+                        // 1. Raw waveform -> normalized [-1, 1]
+                        val rawA = ((waveform[i].toInt() and 0xFF) - 128) / 128f
+                        val bIndex = (i + phaseShift) % count
+                        val rawB = ((waveform[bIndex].toInt() and 0xFF) - 128) / 128f
+
+                        // 2. Difference operator (Fix C)
+                        val a = 0.85f * rawA + 0.15f * (rawA - lastA)
+                        val b = 0.85f * rawB + 0.15f * (rawB - lastB)
+
+                        // 3. Save for next loop iteration
+                        lastA = rawA
+                        lastB = rawB
+
+                        // 4. Map to screen
                         val x = centerX + a * xScale * explosionScale
                         val y = centerY + b * yScale * explosionScale
 
+                        // 5. Draw path
                         if (firstPoint) {
                             path.moveTo(x, y)
                             firstPoint = false
@@ -712,6 +728,7 @@ fun Oscilloscope(
                             path.lineTo(x, y)
                         }
                     }
+
                     path.close()
                 } else {
                     path.addCircle(centerX, centerY, 10f, Path.Direction.CW)
