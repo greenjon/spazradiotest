@@ -29,7 +29,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -50,6 +49,7 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
@@ -66,6 +66,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.createBitmap
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
@@ -75,7 +76,6 @@ import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.MoreExecutors
 import com.greenjon.spazradiotest.ui.theme.SpazradiotestTheme
 import android.graphics.Canvas as AndroidCanvas
-import androidx.core.graphics.createBitmap
 
 class MainActivity : ComponentActivity() {
 
@@ -118,10 +118,10 @@ fun RadioApp(
     var mediaController by remember { mutableStateOf<MediaController?>(null) }
     var isPlaying by remember { mutableStateOf(false) }
 
-    var showSettings by remember { mutableStateOf(false) }
+    var showSettings by rememberSaveable { mutableStateOf(false) }
 
     // Settings State
-    val lissajousMode = remember { mutableStateOf(true) }
+    val lissajousMode = rememberSaveable { mutableStateOf(true) }
  //   val tension = remember { mutableFloatStateOf(0.55f) }
 //    val gainRange = remember { mutableStateOf(0.5f..1.8f) }
 
