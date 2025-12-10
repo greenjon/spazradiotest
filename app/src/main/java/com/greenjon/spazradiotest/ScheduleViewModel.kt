@@ -72,7 +72,11 @@ class ScheduleViewModel : ViewModel() {
                     val type = object : TypeToken<List<RawShow>>() {}.type
                     val rawShows: List<RawShow> = gson.fromJson(responseData, type)
 
-                    val formatted = rawShows.map { formatShowItem(it) }
+                    val now = System.currentTimeMillis()
+                    val formatted = rawShows
+                        .filter { it.end_timestamp > now } // Filter out past shows
+                        .map { formatShowItem(it) }
+                    
                     _schedule.value = formatted
                     _loading.value = false
                 }
