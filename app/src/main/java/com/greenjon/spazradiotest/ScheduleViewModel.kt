@@ -1,5 +1,6 @@
 package com.greenjon.spazradiotest
 
+import android.text.format.DateFormat
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -88,7 +89,9 @@ class ScheduleViewModel : ViewModel() {
         val end = Date(show.end_timestamp)
 
         val weekdayFormat = SimpleDateFormat("EEE", Locale.getDefault())
-        val monthDayFormat = SimpleDateFormat("MM-dd", Locale.getDefault())
+        // Use getBestDateTimePattern to respect user's locale for month/day order and separator
+        val monthDayPattern = DateFormat.getBestDateTimePattern(Locale.getDefault(), "MMdd")
+        val monthDayFormat = SimpleDateFormat(monthDayPattern, Locale.getDefault())
         
         val timeFormat = SimpleDateFormat("h:mm", Locale.getDefault())
         
