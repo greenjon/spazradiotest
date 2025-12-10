@@ -667,7 +667,7 @@ fun Oscilloscope(
             // -------------------------------------------
             // loudnessEnv is 0–128 range, normalize it
             // tweak divisor (32f) to control overall sensitivity
-            val explosionScale = ((loudnessEnv / 64f))
+            val explosionScale = ((loudnessEnv / 50))
                 .coerceIn(0.3f, 4.5f)   // min size vs max explosion
 
             // 4) Dynamic Trail Decay
