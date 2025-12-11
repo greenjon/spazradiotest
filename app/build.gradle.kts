@@ -7,13 +7,13 @@ plugins {
 }
 
 android {
-    namespace = "com.greenjon.spazradiotest"
+    namespace = "llm.slop.spazradio"
     compileSdk {
         version = release(36)
     }
 
     defaultConfig {
-        applicationId = "com.greenjon.spazradiotest" // Verify this is your ID
+        applicationId = "llm.slop.spazradio" // Verify this is your ID
         minSdk = 24 // Or whatever you have
         targetSdk = 34 // Or whatever you have
 

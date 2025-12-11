@@ -1,4 +1,4 @@
-package com.greenjon.spazradiotest.ui.theme
+package llm.slop.spazradio.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

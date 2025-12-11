@@ -1,4 +1,4 @@
-package com.greenjon.spazradiotest
+package llm.slop.spazradio
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "spazradiotest"
+rootProject.name = "spazradio"
 include(":app")
  

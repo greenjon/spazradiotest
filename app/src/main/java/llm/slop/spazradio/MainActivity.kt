@@ -1,4 +1,4 @@
-package com.greenjon.spazradiotest
+package llm.slop.spazradio
 
 import android.Manifest
 import android.content.ComponentName
@@ -76,7 +76,7 @@ import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.MoreExecutors
-import com.greenjon.spazradiotest.ui.theme.SpazradiotestTheme
+import llm.slop.spazradio.ui.theme.SpazRadioTheme
 import android.graphics.Canvas as AndroidCanvas
 import androidx.core.content.edit
 
@@ -108,7 +108,7 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            SpazradiotestTheme {
+            SpazRadioTheme {
                 RadioApp()
             }
         }

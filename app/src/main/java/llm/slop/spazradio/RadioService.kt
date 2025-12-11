@@ -1,4 +1,4 @@
-package com.greenjon.spazradiotest
+package llm.slop.spazradio
 
 import android.app.PendingIntent
 import android.content.Intent
@@ -60,7 +60,7 @@ class RadioService : MediaSessionService() {
             .build()
 
         val okHttpDataSourceFactory = OkHttpDataSource.Factory(okHttpClient)
-            .setUserAgent("SpazRadioTest/1.0")
+            .setUserAgent("SpazRadio/1.0")
 
         // Increase buffer sizes for stream stability
         val loadControl = DefaultLoadControl.Builder()

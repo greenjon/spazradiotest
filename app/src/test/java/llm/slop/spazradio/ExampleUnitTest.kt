@@ -1,4 +1,4 @@
-package com.greenjon.spazradiotest
+package llm.slop.spazradio
 
 import org.junit.Test
 
