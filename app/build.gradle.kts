@@ -1,4 +1,12 @@
 import java.io.ByteArrayOutputStream
+import javax.inject.Inject
+import org.gradle.process.ExecOperations
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
+// Inject the ExecOperations service for this build script
+@get:Inject
+val execOperations: ExecOperations
+    get() = error("This should be injected by Gradle")
 
 plugins {
     alias(libs.plugins.android.application)
@@ -8,57 +16,45 @@ plugins {
 
 android {
     namespace = "llm.slop.spazradio"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 36
 
     defaultConfig {
-        applicationId = "llm.slop.spazradio" // Verify this is your ID
-        minSdk = 24 // Or whatever you have
-        targetSdk = 35 // Or whatever you have
+        applicationId = "llm.slop.spazradio"
+        minSdk = 24
+        targetSdk = 35
 
-        // --- AUTOMATIC VERSIONING LOGIC ---
+        // --- AUTOMATIC VERSIONING LOGIC (correct syntax) ---
         val gitCommitCount = try {
             val stdout = ByteArrayOutputStream()
-            exec {
-                commandLine = listOf("git", "rev-list", "--count", "HEAD")
+            execOperations.exec {
+                commandLine("git", "rev-list", "--count", "HEAD")
                 standardOutput = stdout
             }
             stdout.toString().trim().toInt()
         } catch (e: Exception) {
-            1 // Fallback if git fails (e.g. during a fresh sync)
+            1
         }
 
-        // Version Code = Total number of commits (e.g., 154)
         versionCode = gitCommitCount
-        // Version Name = 1.0.154
         versionName = "1.0.$gitCommitCount"
-        // ----------------------------------
+        // ----------------------------------------------------
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
         vectorDrawables {
             useSupportLibrary = true
         }
     }
 
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
-    buildFeatures {
-        compose = true
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_11)
     }
 }
 
